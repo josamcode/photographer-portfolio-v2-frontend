@@ -54,9 +54,13 @@ const Portfolio = () => {
   const fetchCollections = async () => {
     try {
       const response = await axios.get('/api/collections');
-      setCollections(response.data);
+      // Ensure response.data is an array
+      const collectionsData = Array.isArray(response.data) ? response.data : [];
+      setCollections(collectionsData);
     } catch (error) {
       console.error('Error fetching collections:', error);
+      // Set empty array as fallback
+      setCollections([]);
     } finally {
       setLoading(false);
     }
@@ -66,9 +70,13 @@ const Portfolio = () => {
     try {
       setLoading(true);
       const response = await axios.get(`/api/photos/collection/${collectionId}`);
-      setPhotos(response.data);
+      // Ensure response.data is an array
+      const photosData = Array.isArray(response.data) ? response.data : [];
+      setPhotos(photosData);
     } catch (error) {
       console.error('Error fetching photos:', error);
+      // Set empty array as fallback
+      setPhotos([]);
     } finally {
       setLoading(false);
     }
@@ -80,11 +88,15 @@ const Portfolio = () => {
       const allPhotos = [];
       for (const collection of collections) {
         const response = await axios.get(`/api/photos/collection/${collection._id}`);
-        allPhotos.push(...response.data);
+        // Ensure response.data is an array before spreading
+        const photosData = Array.isArray(response.data) ? response.data : [];
+        allPhotos.push(...photosData);
       }
       setPhotos(allPhotos);
     } catch (error) {
       console.error('Error fetching all photos:', error);
+      // Set empty array as fallback
+      setPhotos([]);
     } finally {
       setLoading(false);
     }
@@ -156,22 +168,22 @@ const Portfolio = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleCollectionSelect(null)}
                 className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${!selectedCollection
-                    ? 'bg-black text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  ? 'bg-black text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
               >
                 All Photos ({photos.length})
               </motion.button>
 
-              {collections.map((collection) => (
+              {Array.isArray(collections) && collections.map((collection) => (
                 <motion.button
                   key={collection._id}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleCollectionSelect(collection)}
                   className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${selectedCollection?._id === collection._id
-                      ? 'bg-black text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-black text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                 >
                   {collection.name}
@@ -274,14 +286,14 @@ const Portfolio = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className={`grid gap-6 ${viewMode === 'grid'
-                ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
               }`}>
               {[...Array(12)].map((_, index) => (
                 <div key={index} className="animate-pulse">
                   <div className={`bg-gray-300 rounded-2xl ${viewMode === 'masonry'
-                      ? `h-${60 + (index % 3) * 20}`
-                      : 'aspect-square'
+                    ? `h-${60 + (index % 3) * 20}`
+                    : 'aspect-square'
                     }`}></div>
                   <div className="mt-4 space-y-2">
                     <div className="h-4 bg-gray-300 rounded"></div>

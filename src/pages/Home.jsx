@@ -25,9 +25,13 @@ const Home = () => {
   const fetchFeaturedCollections = async () => {
     try {
       const response = await axios.get('/api/collections');
-      setFeaturedCollections(response.data.slice(0, 6));
+      // Ensure response.data is an array before slicing
+      const collections = Array.isArray(response.data) ? response.data : [];
+      setFeaturedCollections(collections.slice(0, 6));
     } catch (error) {
       console.error('Error fetching collections:', error);
+      // Set empty array as fallback
+      setFeaturedCollections([]);
     } finally {
       setLoading(false);
     }
@@ -190,59 +194,59 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredCollections.map((collection, index) => (
-                <motion.div
-                  key={collection._id}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="group"
-                >
-                  <Link to={`/portfolio/${collection._id}`}>
-                    <div className="relative overflow-hidden rounded-2xl bg-gray-900 aspect-square">
-                      {collection.coverImage ? (
-                        <img
-                          src={`/api/uploads/${collection.coverImage}`}
-                          alt={collection.name}
-                          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
-                          <CameraIcon className="h-16 w-16 text-white/50" />
-                        </div>
-                      )}
+              {Array.isArray(featuredCollections) && featuredCollections.length > 0 ? (
+                featuredCollections.map((collection, index) => (
+                  <motion.div
+                    key={collection._id}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="group"
+                  >
+                    <Link to={`/portfolio/${collection._id}`}>
+                      <div className="relative overflow-hidden rounded-2xl bg-gray-900 aspect-square">
+                        {collection.coverImage ? (
+                          <img
+                            src={`/api/uploads/${collection.coverImage}`}
+                            alt={collection.name}
+                            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center">
+                            <CameraIcon className="h-16 w-16 text-white/50" />
+                          </div>
+                        )}
 
-                      {/* Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
 
-                      {/* Content */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h3 className="text-2xl font-bold text-white mb-2">
-                          {collection.name}
-                        </h3>
-                        <p className="text-white/80 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                          {collection.description || 'Explore this beautiful collection of photographs.'}
-                        </p>
+                        {/* Content */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="text-2xl font-bold text-white mb-2">
+                            {collection.name}
+                          </h3>
+                          <p className="text-white/80 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                            {collection.description || 'Explore this beautiful collection of photographs.'}
+                          </p>
 
-                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                          <div className="inline-flex items-center text-white font-medium">
-                            View Collection
-                            <ArrowRightIcon className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
+                          <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                            <div className="inline-flex items-center text-white font-medium">
+                              View Collection
+                              <ArrowRightIcon className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {!loading && featuredCollections.length === 0 && (
-            <div className="text-center py-20">
-              <CameraIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500 text-xl">No collections available yet.</p>
+                    </Link>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-20">
+                  <CameraIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 text-xl">No collections available yet.</p>
+                </div>
+              )}
             </div>
           )}
 
