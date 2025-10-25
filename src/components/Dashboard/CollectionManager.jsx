@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 import { toast } from 'react-toastify';
 
 const CollectionManager = () => {
@@ -21,7 +21,7 @@ const CollectionManager = () => {
 
   const fetchCollections = async () => {
     try {
-      const response = await axios.get('/api/collections/admin');
+      const response = await apiClient.get('/api/collections/admin');
       setCollections(response.data);
     } catch (error) {
       toast.error('Error fetching collections');
@@ -34,10 +34,10 @@ const CollectionManager = () => {
     e.preventDefault();
     try {
       if (editingCollection) {
-        await axios.put(`/api/collections/${editingCollection._id}`, formData);
+        await apiClient.put(`/api/collections/${editingCollection._id}`, formData);
         toast.success('Collection updated successfully');
       } else {
-        await axios.post('/api/collections', formData);
+        await apiClient.post('/api/collections', formData);
         toast.success('Collection created successfully');
       }
       fetchCollections();
@@ -214,8 +214,8 @@ const CollectionManager = () => {
               </p>
               <div className="flex justify-between items-center text-sm">
                 <span className={`px-2 py-1 rounded-full text-xs ${collection.isPublished
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-red-100 text-red-800'
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
                   }`}>
                   {collection.isPublished ? 'Published' : 'Draft'}
                 </span>

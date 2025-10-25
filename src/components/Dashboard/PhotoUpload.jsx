@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { motion } from 'framer-motion';
 import { CloudArrowUpIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import axios from 'axios';
+import apiClient from '../../api/apiClient';
 import { toast } from 'react-toastify';
 
 const PhotoUpload = () => {
@@ -28,7 +28,7 @@ const PhotoUpload = () => {
 
   const fetchCollections = async () => {
     try {
-      const response = await axios.get('/api/collections/admin');
+      const response = await apiClient.get('/api/collections/admin');
       setCollections(response.data);
     } catch (error) {
       toast.error('Error fetching collections');
@@ -90,7 +90,7 @@ const PhotoUpload = () => {
         uploadFormData.append('iso', formData.iso);
         uploadFormData.append('focalLength', formData.focalLength);
 
-        await axios.post('/api/photos/upload', uploadFormData, {
+        await apiClient.post('/api/photos/upload', uploadFormData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -151,8 +151,8 @@ const PhotoUpload = () => {
         <div
           {...getRootProps()}
           className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors duration-200 ${isDragActive
-              ? 'border-blue-400 bg-blue-50'
-              : 'border-gray-300 hover:border-gray-400'
+            ? 'border-blue-400 bg-blue-50'
+            : 'border-gray-300 hover:border-gray-400'
             }`}
         >
           <input {...getInputProps()} />

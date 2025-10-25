@@ -8,7 +8,7 @@ import {
   CameraIcon,
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
-import axios from 'axios';
+import apiClient from '../api/apiClient';
 import Gallery from '../components/Gallery';
 
 const Portfolio = () => {
@@ -53,7 +53,7 @@ const Portfolio = () => {
 
   const fetchCollections = async () => {
     try {
-      const response = await axios.get('/api/collections');
+      const response = await apiClient.get('/api/collections');
       // Ensure response.data is an array
       const collectionsData = Array.isArray(response.data) ? response.data : [];
       setCollections(collectionsData);
@@ -69,7 +69,7 @@ const Portfolio = () => {
   const fetchPhotos = async (collectionId) => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/photos/collection/${collectionId}`);
+      const response = await apiClient.get(`/api/photos/collection/${collectionId}`);
       // Ensure response.data is an array
       const photosData = Array.isArray(response.data) ? response.data : [];
       setPhotos(photosData);
@@ -87,7 +87,7 @@ const Portfolio = () => {
       setLoading(true);
       const allPhotos = [];
       for (const collection of collections) {
-        const response = await axios.get(`/api/photos/collection/${collection._id}`);
+        const response = await apiClient.get(`/api/photos/collection/${collection._id}`);
         // Ensure response.data is an array before spreading
         const photosData = Array.isArray(response.data) ? response.data : [];
         allPhotos.push(...photosData);

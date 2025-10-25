@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient';
 
 const AuthContext = createContext();
 
@@ -27,11 +27,11 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async (token) => {
     try {
-      await axios.post('/api/auth/verify');
+      await apiClient.post('/api/auth/verify');
       setIsAuthenticated(true);
     } catch (error) {
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
+      delete apiClient.defaults.headers.common['Authorization'];
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
@@ -40,11 +40,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (password) => {
     try {
-      const response = await axios.post('/api/auth/login', { password });
+      const response = await apiClient.post('/api/auth/login', { password });
       const { token } = response.data;
 
       localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setIsAuthenticated(true);
 
       return { success: true };
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['Authorization'];
+    delete apiClient.defaults.headers.common['Authorization'];
     setIsAuthenticated(false);
   };
 

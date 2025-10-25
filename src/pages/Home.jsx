@@ -9,7 +9,7 @@ import {
   EyeIcon,
   HeartIcon
 } from '@heroicons/react/24/outline';
-import axios from 'axios';
+import apiClient from '../api/apiClient';
 
 const Home = () => {
   const [featuredCollections, setFeaturedCollections] = useState([]);
@@ -24,7 +24,7 @@ const Home = () => {
 
   const fetchFeaturedCollections = async () => {
     try {
-      const response = await axios.get('/api/collections');
+      const response = await apiClient.get('/api/collections');
       // Ensure response.data is an array before slicing
       const collections = Array.isArray(response.data) ? response.data : [];
       setFeaturedCollections(collections.slice(0, 6));
