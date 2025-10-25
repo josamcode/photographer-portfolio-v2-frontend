@@ -26,6 +26,7 @@ const PhotoUpload = () => {
     fetchCollections();
   }, []);
 
+  // Fetch collections for the admin dashboard
   const fetchCollections = async () => {
     try {
       const response = await apiClient.get('/api/collections/admin');
@@ -35,6 +36,7 @@ const PhotoUpload = () => {
     }
   };
 
+  // Handle file drop
   const onDrop = useCallback((acceptedFiles) => {
     const newFiles = acceptedFiles.map(file => ({
       file,
