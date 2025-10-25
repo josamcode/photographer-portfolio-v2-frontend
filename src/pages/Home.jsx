@@ -10,6 +10,7 @@ import {
   HeartIcon
 } from '@heroicons/react/24/outline';
 import apiClient from '../api/apiClient';
+import config from '../config/config';
 
 const Home = () => {
   const [featuredCollections, setFeaturedCollections] = useState([]);
@@ -208,7 +209,7 @@ const Home = () => {
                       <div className="relative overflow-hidden rounded-2xl bg-gray-900 aspect-square">
                         {collection.coverImage ? (
                           <img
-                            src={`/api/uploads/${collection.coverImage}`}
+                            src={`${config.UPLOADS_URL}/${collection.coverImage}`}
                             alt={collection.name}
                             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
                           />

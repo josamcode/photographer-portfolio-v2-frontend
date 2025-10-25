@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import apiClient from '../../api/apiClient';
+import config from '../../config/config';
 import { toast } from 'react-toastify';
 
 const CollectionManager = () => {
@@ -182,7 +183,7 @@ const CollectionManager = () => {
           >
             {collection.coverImage ? (
               <img
-                src={`/api/uploads/${collection.coverImage}`}
+                src={`${config.UPLOADS_URL}/${collection.coverImage}`}
                 alt={collection.name}
                 className="w-full h-48 object-cover"
               />
